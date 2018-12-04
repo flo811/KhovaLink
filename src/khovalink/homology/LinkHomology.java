@@ -1,8 +1,5 @@
 package khovalink.homology;
 
-import khovalink.persistence.Link;
-import maths.exceptions.MathsArgumentException;
-import maths.homology.DifferentialBiComplex;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -10,7 +7,10 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.concurrent.Task;
 import khovalink.KhovaLog;
+import khovalink.persistence.Link;
+import maths.exceptions.MathsArgumentException;
 import maths.homology.BiGradedHomology;
+import maths.homology.DifferentialBiComplex;
 import maths.homology.SNFCalculator;
 import maths.matrix.IntegerMatrix;
 import maths.numbers.IntegerCalc;
