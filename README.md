@@ -1,9 +1,9 @@
 # KhovaLink
-First published version (2018-12-03).
-Author : Florian PALACIN
-Mail : flo811@msn.com
+* First published version (2018-12-03).
+* Author : Florian PALACIN
+* Mail : flo811@msn.com
 
-Created on Netneans 8.2 using JavaSE 8 and FavaFX for display (needs Maths package aviable on https://github.com/flo811/Maths).
+Created on Netneans 8.2 using JavaSE 8 and JavaFX for display (needs Maths package aviable on https://github.com/flo811/Maths).
 
 Allows Khovanov homology calculation for knots and links (up to about 13 crossings, depending on aviable RAM).
 
