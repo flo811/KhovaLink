@@ -16,7 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 
 /**
- * Static class dealing about link's database.
+ * Static class dealing about link's persistence in file.
  *
  * @author flo
  */

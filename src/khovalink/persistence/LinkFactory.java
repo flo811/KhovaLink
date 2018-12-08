@@ -6,6 +6,7 @@ import khovalink.gui.windows.canvas.LinkCrossing;
 import khovalink.gui.windows.canvas.LinkCurve;
 
 /**
+ * Utility class used as a {@code Link} factory.
  *
  * @author flo
  */

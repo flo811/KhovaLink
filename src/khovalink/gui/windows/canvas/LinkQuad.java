@@ -41,7 +41,6 @@ public class LinkQuad extends QuadCurve implements LinkCurve, Serializable {
     @Override
     public void drawOn(final GraphicsContext gc) {
         gc.setStroke(getColor());
-        gc.setFill(getColor());
         gc.moveTo(getStartX(), getStartY());
         gc.quadraticCurveTo(getControlX(), getControlY(), getEndX(), getEndY());
     }

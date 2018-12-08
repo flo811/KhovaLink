@@ -17,12 +17,12 @@ import maths.numbers.IntegerCalc;
 
 /**
  *
- * @author ib
+ * @author flo
  */
 public class LinkHomology extends Task<BiGradedHomology> {
 
     private final Link link;
-    private final Resolution resolution;
+    private final LinkResolution resolution;
 
     private final int crossingNbr;
 
@@ -31,7 +31,7 @@ public class LinkHomology extends Task<BiGradedHomology> {
 
     public LinkHomology(final Link link) {
         this.link = link;
-        resolution = new Resolution(link);
+        resolution = new LinkResolution(link);
         crossingNbr = link.getNbCross();
 
         int x = 0, y = 0;
@@ -97,7 +97,7 @@ public class LinkHomology extends Task<BiGradedHomology> {
         final int resolNbr = IntegerCalc.pow2(crossingNbr);
 
         for (int resol = 0; resol < resolNbr; resol++) {
-            final int circleNbr = resolution.resolve(resol);
+            final int circleNbr = resolution.calculateCirclesNbr(resol);
             final int markerNbr = IntegerCalc.pow2(circleNbr);
             final int iGrad = Integer.bitCount(resol) - negCross;
 
@@ -133,8 +133,8 @@ public class LinkHomology extends Task<BiGradedHomology> {
                         continue;
                     }
 
-                    final ArrayList<ArrayList<Integer>> circles1 = resolution.getCircles(eks1[0]);
-                    final ArrayList<ArrayList<Integer>> circles2 = resolution.getCircles(eks2[0]);
+                    final ArrayList<ArrayList<Integer>> circles1 = resolution.getNonEmptyCircles(eks1[0]);
+                    final ArrayList<ArrayList<Integer>> circles2 = resolution.getNonEmptyCircles(eks2[0]);
 
                     final ArrayList<ArrayList<Integer>> lessCircles, moreCircles;
                     if (circles1.size() > circles2.size()) {

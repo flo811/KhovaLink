@@ -1,6 +1,7 @@
 package khovalink.persistence;
 
 /**
+ * A personalized exception for {@code Link} issues.
  *
  * @author flo
  */

@@ -18,7 +18,11 @@ import javafx.scene.shape.Shape;
 import javafx.stage.StageStyle;
 import khovalink.KhovaLog;
 import khovalink.persistence.GraphicalLink;
+import maths.exceptions.MathsArgumentException;
 import maths.exceptions.MathsException;
+import maths.exceptions.MathsLoopOverflowException;
+import maths.exceptions.MathsPrecisionException;
+import maths.exceptions.MathsWrongResultException;
 import maths.intersection.DetailledIntersection2D;
 import maths.intersection.InterShape;
 
@@ -40,7 +44,7 @@ public class LinkCanvas extends Canvas {
     private final SimpleBooleanProperty isEmptyProperty = new SimpleBooleanProperty(true);
     private final SimpleObjectProperty<GraphicalLink> graphicalLinkProperty = new SimpleObjectProperty<>();
 
-    private final ArrayList<LinkCurve> knot = new ArrayList<>(30);
+    private final ArrayList<LinkCurve> knotCurves = new ArrayList<>(30);
     private final ArrayList<ArrayList<LinkCurve>> linkCurves = new ArrayList<>(5);
     private final ArrayList<LinkCrossing> intersectionPoints = new ArrayList<>(20);
 
@@ -52,7 +56,6 @@ public class LinkCanvas extends Canvas {
     public LinkCanvas() {
         super(WIDTH, HEIGHT);
 
-        gc.setFill(Color.AQUA);
         gc.setLineWidth(3);
         repaint();
 
@@ -67,16 +70,14 @@ public class LinkCanvas extends Canvas {
         gc.setFill(Color.AQUA);
         gc.fillRoundRect(0, 0, WIDTH, HEIGHT, 30, 30);
 
+        drawComponent(knotCurves);
+
         linkCurves.forEach(curves -> {
             drawComponent(curves);
         });
 
-        if (!knot.isEmpty()) {
-            drawComponent(knot);
-        }
-
         intersectionPoints.forEach(cross -> {
-            final Line line = cross.getLine();
+            final LinkCurve line = cross.getLine();
             gc.setFill(Color.AQUA);
             gc.setStroke(cross.getCurveOver().getColor());
             gc.fillOval(cross.getIntersection().getX() - 10, cross.getIntersection().getY() - 10, 20, 20);
@@ -126,7 +127,6 @@ public class LinkCanvas extends Canvas {
      * @param point The {@code Point2D} representing the mouse's position.
      */
     private void addPoint(final Point2D point) {
-
         if (start == null) {
             start = point;
             isEmptyProperty.set(false);
@@ -143,11 +143,11 @@ public class LinkCanvas extends Canvas {
             }
             setCrossOrietation(crossings);
             intersectionPoints.addAll(crossings);
-            knot.add(newCurve);
+            knotCurves.add(newCurve);
 
             if (newCurve.getEnd().equals(start)) {
-                linkCurves.add((ArrayList<LinkCurve>) knot.clone());
-                knot.clear();
+                linkCurves.add((ArrayList<LinkCurve>) knotCurves.clone());
+                knotCurves.clear();
                 start = null;
 
                 graphicalLinkProperty.set(new GraphicalLink(intersectionPoints, linkCurves));
@@ -170,7 +170,7 @@ public class LinkCanvas extends Canvas {
         final Color color = COLORS[linkCurves.size() % COLORS.length];
         final boolean closeFromStart = fromPoint.distance(start) < 20;
         final int component = linkCurves.size();
-        final int knotSize = knot.size();
+        final int knotSize = knotCurves.size();
         final LinkCurve curve;
 
         switch (knotSize) {
@@ -179,16 +179,16 @@ public class LinkCanvas extends Canvas {
                 curve.setColor(closeFromStart ? Color.RED : color);
                 break;
             case 1:
-                final Point2D lastEnd = knot.get(0).getEnd();
+                final Point2D lastEnd = knotCurves.get(0).getEnd();
                 final Point2D control = lastEnd.multiply(1.3).subtract(start.multiply(0.3));
                 curve = new LinkQuad(lastEnd, control, fromPoint, component, 1, color);
                 curve.setColor(closeFromStart || fromPoint.distance(lastEnd) < 20 ? Color.RED : color);
                 break;
             default:
-                final LinkQuad lastCurve = (LinkQuad) knot.get(knotSize - 1);
+                final LinkQuad lastCurve = (LinkQuad) knotCurves.get(knotSize - 1);
                 final Point2D newControl = lastCurve.getEnd().multiply(1.3).subtract(lastCurve.getControl().multiply(0.3));
                 curve = new LinkQuad(lastCurve.getEnd(), newControl, closeFromStart ? start : fromPoint, component, knotSize, color);
-                curve.setColor(fromPoint.distance(knot.get(knotSize - 1).getEnd()) < 20 ? Color.RED : color);
+                curve.setColor(fromPoint.distance(knotCurves.get(knotSize - 1).getEnd()) < 20 ? Color.RED : color);
         }
 
         return curve;
@@ -212,7 +212,7 @@ public class LinkCanvas extends Canvas {
             }
         }
 
-        for (final LinkCurve curve : knot) {
+        for (final LinkCurve curve : knotCurves) {
             if (!lastDrown.equals(curve)) {
                 crossings.addAll(getCrossings(lastDrown, curve));
             }
@@ -313,7 +313,7 @@ public class LinkCanvas extends Canvas {
             gc.strokeOval(cross.getIntersection().getX() - 10, cross.getIntersection().getY() - 10, 20, 20);
             final Optional<ButtonType> pressedButton = dial.showAndWait();
             cross.makeSign(pressedButton.get() == ButtonType.OK);
-            final Line line = cross.getLine();
+            final LinkCurve line = cross.getLine();
             gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
         }
     }
@@ -339,7 +339,7 @@ public class LinkCanvas extends Canvas {
      */
     public void clear() {
         start = null;
-        knot.clear();
+        knotCurves.clear();
         linkCurves.clear();
         intersectionPoints.clear();
         isEmptyProperty.set(true);

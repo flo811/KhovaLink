@@ -9,6 +9,7 @@ import khovalink.gui.windows.canvas.LinkCurve;
 import khovalink.gui.windows.canvas.LinkSegment;
 
 /**
+ * Proxy class to serialize {@code LinkQuad}.
  *
  * @author flo
  */

@@ -224,7 +224,7 @@ public final class DrawWindow extends Window {
                 linkToSave = LinkFactory.create(nameTF.getText(), nbrComponentsTF.getText(), nbCrossTF.getText(),
                         gaussCodeTF.getText(), signsTF.getText(), graphicalLinkProperty.get());
             }
-        } catch (LinkException ex) {
+        } catch (final LinkException ex) {
             final Alert alert = new Alert(Alert.AlertType.WARNING, ex.getMessage());
             alert.setTitle("Error");
             alert.setHeaderText("The link is invalid for the following reasons :");

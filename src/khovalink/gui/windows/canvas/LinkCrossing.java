@@ -95,6 +95,8 @@ public final class LinkCrossing extends DetailledIntersection2D<Shape, Shape> im
             line = new LinkSegment(new Point2D(interList.get(0).getIntersection().getX(), interList.get(0).getIntersection().getY()),
                     new Point2D(interList.get(1).getIntersection().getX(), interList.get(1).getIntersection().getY()), -1, -1, Color.TRANSPARENT);
         }
+
+        line.setColor(curveOver.getColor());
     }
 
     /**
@@ -112,7 +114,7 @@ public final class LinkCrossing extends DetailledIntersection2D<Shape, Shape> im
      *
      * @return The {@code Line} to draw.
      */
-    public Line getLine() {
+    public LinkCurve getLine() {
         return line;
     }
 
